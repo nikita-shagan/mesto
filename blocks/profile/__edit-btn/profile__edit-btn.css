@@ -9,3 +9,13 @@
   padding: 0;
   justify-self: end;
 }
+
+@media screen and (max-width: 768px) {
+  .profile__edit-btn {
+    position: absolute;
+    top: 36px;
+    right: -28px;
+    width: 18px;
+    height: 18px;
+  }
+ }
