@@ -1,8 +1,8 @@
 .place__info {
   height: 79px;
   background: #FFFFFF;
-  display: flex;
-  justify-content: space-between;
+  display: grid;
+  grid-template-columns: 1fr 22px;
   align-items: center;
   padding-left: 21px;
   padding-right: 20px;
