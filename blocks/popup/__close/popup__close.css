@@ -4,6 +4,13 @@
   right: -40px;
   display: block;
   cursor: pointer;
+  width: 32px;
+  height: 32px;
+  background-image: url("../../../images/close-icon.svg");
+  background-color: transparent;
+  margin: 0;
+  padding: 0;
+  border: none;
 }
 
 .popup__close:hover {
@@ -16,5 +23,6 @@
     top: -36px;
     width: 20px;
     height: 20px;
+    background-size: 20px 20px;
   }
 }

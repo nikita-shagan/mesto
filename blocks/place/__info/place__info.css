@@ -1,9 +1,7 @@
 .place__info {
-  height: 79px;
   background: #FFFFFF;
   display: grid;
-  grid-template-columns: 1fr 22px;
+  grid-template-columns: 1fr 50px;
   align-items: center;
-  padding-left: 21px;
-  padding-right: 20px;
+  padding: 25px 20px 25px 21px;
 }

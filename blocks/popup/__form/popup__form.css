@@ -1,7 +1,7 @@
 .popup__form {
   width: 100%;
   max-width: 430px;
-  height: 330px;
+  min-height: 330px;
   background: #FFFFFF;
   box-shadow: 0px 0px 25px rgba(0, 0, 0, 0.15);
   border-radius: 10px;
@@ -10,12 +10,11 @@
   flex-direction: column;
   justify-content: space-between;
   box-sizing: border-box;
-  position: relative;
 }
 
 @media screen and (max-width: 450px) {
   .popup__form {
-    height: 322px;
+    min-height: 322px;
     padding: 25px 22px;
   }
 }
