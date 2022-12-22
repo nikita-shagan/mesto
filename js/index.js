@@ -1,12 +1,19 @@
-const popup = document.querySelector('.popup');
-const popupCloser = popup.querySelector('.popup__close');
-const popupOpener = document.querySelector(".profile__edit-btn");
+const popupProfileEditor = document.querySelector('.popup_sort_profile');
+const popupPlacesEditor = document.querySelector('.popup_sort_place');
+const popupProfileEditorCloser = popupProfileEditor.querySelector('.popup__close');
+const popupPlacesEditorCloser = popupPlacesEditor.querySelector('.popup__close');
+const editProfileButton = document.querySelector('.profile__edit-btn');
+const addCardButton = document.querySelector('.profile__add-btn');
 
-const formElement = popup.querySelector('.popup__form');
-const inputName = popup.querySelector('.popup__input_kind_name');
-const inputAbout = popup.querySelector('.popup__input_kind_about');
+const formProfileElement = popupProfileEditor.querySelector('.popup__form');
+const inputName = popupProfileEditor.querySelector('.popup__input_kind_name');
+const inputAbout = popupProfileEditor.querySelector('.popup__input_kind_about');
 const profileName = document.querySelector('.profile__name');
 const profileAbout = document.querySelector('.profile__description');
+
+const formPlacesElement = popupPlacesEditor.querySelector('.popup__form');
+const placesInputName = popupPlacesEditor.querySelector('.popup__input_kind_name');
+const placesInputLink = popupPlacesEditor.querySelector('.popup__input_kind_link');
 
 const placesList = document.querySelector('.places__list');
 
@@ -24,7 +31,7 @@ const initialCards = [
     link: '../images/baikal.jpg'
   },
   {
-    name: 'Ельбрус',
+    name: 'Эльбрус',
     link: '../images/elbrus.jpg'
   },
   {
@@ -37,23 +44,37 @@ const initialCards = [
   }
 ];
 
-function openPopup() {
-  popup.classList.add('popup_opened');
+function openPopupProfileEditor() {
+  popupProfileEditor.classList.add('popup_opened');
   inputName.value = profileName.textContent;
   inputAbout.value = profileAbout.textContent;
 }
 
-
-function closePopup() {
-  popup.classList.remove('popup_opened');
+function openPopupPlacesEditor() {
+  popupPlacesEditor.classList.add('popup_opened');
 }
 
+function closePopupProfileEditor() {
+  popupProfileEditor.classList.remove('popup_opened');
+}
 
-function handleFormSubmit(evt) {
+function closePopupPlacesEditor() {
+  popupPlacesEditor.classList.remove('popup_opened');
+}
+
+function handleFormSubmitProfile(evt) {
   evt.preventDefault();
   profileName.textContent = inputName.value;
   profileAbout.textContent = inputAbout.value;
-  closePopup()
+  closePopupProfileEditor()
+}
+
+function handleFormSubmitPlaces(evt) {
+  evt.preventDefault();
+  addCard(placesInputName.value, placesInputLink.value);
+  closePopupPlacesEditor();
+  placesInputName.value = '';
+  placesInputLink.value = '';
 }
 
 function addCard(name, link) {
@@ -66,6 +87,11 @@ function addCard(name, link) {
 
 initialCards.forEach(item => addCard(item.name, item.link));
 
-formElement.addEventListener('submit', handleFormSubmit);
-popupOpener.addEventListener('click', openPopup)
-popupCloser.addEventListener('click', closePopup)
+formProfileElement.addEventListener('submit', handleFormSubmitProfile);
+formPlacesElement.addEventListener('submit', handleFormSubmitPlaces);
+
+editProfileButton.addEventListener('click', openPopupProfileEditor);
+addCardButton.addEventListener('click', openPopupPlacesEditor);
+
+popupProfileEditorCloser.addEventListener('click', closePopupProfileEditor);
+popupPlacesEditorCloser.addEventListener('click', closePopupPlacesEditor);

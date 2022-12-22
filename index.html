@@ -35,7 +35,7 @@
         &#169; 2020 Mesto Russia
       </p>
     </footer>
-    <div class="popup">
+    <div class="popup popup_sort_profile">
       <div class="popup__container">
         <button class="popup__close" type="button"></button>
         <form action="#" name="profileEditing" class="popup__form">
@@ -46,6 +46,21 @@
           <input type="text" class="popup__input popup__input_kind_about" id="popup-about" name="popup-about" value="" placeholder="Работа" required>
           <button class="popup__submit-btn" type="submit">
             Сохранить
+          </button>
+        </form>
+      </div>
+    </div>
+    <div class="popup popup_sort_place">
+      <div class="popup__container">
+        <button class="popup__close" type="button"></button>
+        <form action="#" name="profileEditing" class="popup__form">
+          <h3 class="popup__title">
+            Новое место
+          </h3>
+          <input type="text" class="popup__input popup__input_kind_name" id="popup-name" name="popup-name" value="" placeholder="Название" required>
+          <input type="text" class="popup__input popup__input_kind_link" id="popup-about" name="popup-about" value="" placeholder="Ссылка на картинку" required>
+          <button class="popup__submit-btn" type="submit">
+            Создать
           </button>
         </form>
       </div>
