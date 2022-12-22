@@ -27,6 +27,10 @@ const initialCards = [
     link: '../images/sudak.jpg'
   },
   {
+    name: 'Шерегеш',
+    link: '../images/sheregesh.jpg'
+  },
+  {
     name: 'Байкал',
     link: '../images/baikal.jpg'
   },
@@ -37,10 +41,6 @@ const initialCards = [
   {
     name: 'Камчатка',
     link: '../images/kamchatka.jpg'
-  },
-  {
-    name: 'Шерегеш',
-    link: '../images/sheregesh.jpg'
   }
 ];
 
@@ -82,10 +82,13 @@ function addCard(name, link) {
   const cardElement = cardTemplate.querySelector('.place').cloneNode(true);
   cardElement.querySelector('.place__name').textContent = name;
   cardElement.querySelector('.place__image').src = link;
-  placesList.append(cardElement);
+  placesList.prepend(cardElement);
 }
 
 initialCards.forEach(item => addCard(item.name, item.link));
+
+const likeButtons = document.querySelectorAll('.place__like');
+Array.from(likeButtons).forEach(item => item.addEventListener('click', () => item.classList.toggle('place__like_active')));
 
 formProfileElement.addEventListener('submit', handleFormSubmitProfile);
 formPlacesElement.addEventListener('submit', handleFormSubmitPlaces);
