@@ -3,4 +3,9 @@
   top: 20px;
   right: 20px;
   cursor: pointer;
+  transition: opacity .2s linear;
+}
+
+.place__delete:hover {
+  opacity: .6;
 }

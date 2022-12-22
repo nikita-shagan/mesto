@@ -51,7 +51,7 @@ function openPopup(popup) {
   popup.classList.add('popup_opened');
 }
 
-function popupProfileRender() {
+function renderPopupProfile() {
   inputName.value = profileName.textContent;
   inputAbout.value = profileAbout.textContent;
 }
@@ -106,7 +106,7 @@ formPlacesElement.addEventListener('submit', handleFormSubmitPlaces);
 
 editProfileButton.addEventListener('click', () => {
   openPopup(popupProfileEditor);
-  popupProfileRender();
+  renderPopupProfile();
 });
 
 addPlaceButton.addEventListener('click', () => openPopup(popupPlacesEditor));
