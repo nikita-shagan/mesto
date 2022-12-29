@@ -25,6 +25,14 @@ let currentPopup
 function closePopupByEscape(evt) {
   if (evt.key === 'Escape') {
     closePopup(currentPopup);
+    document.removeEventListener('keydown', closePopupByEscape)
+  }
+}
+
+function closePopupByOverlay(evt) {
+  if (Array.from(evt.target.classList).includes('popup__close') || evt.target === evt.currentTarget) {
+    closePopup(currentPopup)
+    currentPopup.removeEventListener('click', closePopupByOverlay)
   }
 }
 
@@ -33,6 +41,7 @@ function openPopup(popup) {
   popup.classList.add('popup_opened')
   currentPopup = popup
   document.addEventListener('keydown', closePopupByEscape)
+  popup.addEventListener('click', closePopupByOverlay)
 }
 
 
@@ -50,7 +59,6 @@ function openPopupProfile() {
 
 function closePopup(popup) {
   popup.classList.remove('popup_opened')
-  document.removeEventListener('keydown', closePopupByEscape)
 }
 
 
@@ -127,14 +135,6 @@ function addEventListeners() {
 
   popupProfileOpenButton.addEventListener('click', openPopupProfile)
   popupPlacesOpenButton.addEventListener('click', () => openPopup(popupPlacesEditor))
-
-  popups.forEach(popup => {
-    popup.addEventListener('click', evt => {
-      if (Array.from(evt.target.classList).includes('popup__close') || evt.target === evt.currentTarget) {
-        closePopup(popup)
-      }
-    })
-  })
 }
 
 
