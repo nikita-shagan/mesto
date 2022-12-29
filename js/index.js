@@ -20,13 +20,18 @@ const placeInputLink = popupPlacesEditor.querySelector('.popup__input_kind_link'
 const placesList = document.querySelector('.places__list')
 
 
-function openPopup(popup) {
-  popup.classList.add('popup_opened')
+function closePopupByEscape(popup) {
+  return function (evt) {
+    if (evt.key === 'Escape') {
+      closePopup(popup);
+    }
+  }
 }
 
 
-function isPopupOpened(popup) {
-  return Array.from(popup.classList).includes('popup_opened')
+function openPopup(popup) {
+  popup.classList.add('popup_opened')
+  document.addEventListener('keydown', closePopupByEscape(popup))
 }
 
 
@@ -44,6 +49,7 @@ function openPopupProfile() {
 
 function closePopup(popup) {
   popup.classList.remove('popup_opened')
+  document.removeEventListener('keydown', closePopupByEscape(popup))
 }
 
 
@@ -127,16 +133,6 @@ function addEventListeners() {
         closePopup(popup)
       }
     })
-  })
-
-  document.addEventListener('keydown', evt => {
-    if (evt.key === 'Escape') {
-      popups.forEach(popup => {
-        if (isPopupOpened(popup)) {
-          closePopup(popup);
-        }
-      })
-    }
   })
 }
 

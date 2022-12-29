@@ -6,6 +6,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Mesto</title>
   <link rel="stylesheet" href="./pages/index.css">
+  <script type="module" src="./js/index.js"></script>
+  <script defer src="./js/validate.js"></script>
 </head>
 <body>
   <div class="page">
@@ -38,12 +40,18 @@
     <div class="popup popup_sort_profile">
       <div class="popup__container">
         <button class="popup__close" type="button"></button>
-        <form action="#" name="profileEditing" class="popup__form">
+        <form action="#" name="profileEditing" class="popup__form" novalidate>
           <h3 class="popup__title">
             Редактировать профиль
           </h3>
-          <input type="text" class="popup__input popup__input_kind_name" name="popup-name" value="" placeholder="Имя" required>
-          <input type="text" class="popup__input popup__input_kind_about" name="popup-about" value="" placeholder="Работа" required>
+          <label class="popup__input-container">
+            <input type="text" class="popup__input popup__input_kind_name" name="name" value="" placeholder="Имя" required minlength="2" maxlength="40">
+            <span class="popup__error name-input-error"></span>
+          </label>
+          <label class="popup__input-container">
+            <input type="text" class="popup__input popup__input_kind_about" name="about" value="" placeholder="Работа" required minlength="2" maxlength="200">
+            <span class="popup__error about-input-error"></span>
+          </label>
           <button class="popup__submit-btn" type="submit">
             Сохранить
           </button>
@@ -53,12 +61,18 @@
     <div class="popup popup_sort_place">
       <div class="popup__container">
         <button class="popup__close" type="button"></button>
-        <form action="#" name="placeAdding" class="popup__form">
+        <form action="#" name="placeAdding" class="popup__form" novalidate>
           <h3 class="popup__title">
             Новое место
           </h3>
-          <input type="text" class="popup__input popup__input_kind_name" name="place-name" value="" placeholder="Название" required>
-          <input type="text" class="popup__input popup__input_kind_link" name="place-link" value="" placeholder="Ссылка на картинку" required>
+          <label class="popup__input-container">
+            <input type="text" class="popup__input popup__input_kind_name" name="place" value="" placeholder="Название" required minlength="2" maxlength="30">
+            <span class="popup__error place-input-error"></span>
+          </label>
+          <label class="popup__input-container">
+            <input type="url" class="popup__input popup__input_kind_link" name="link" value="" placeholder="Ссылка на картинку" required>
+            <span class="popup__error link-input-error"></span>
+          </label>
           <button class="popup__submit-btn" type="submit">
             Создать
           </button>
@@ -89,6 +103,5 @@
       </div>
     </li>
   </template>
-  <script type="module" src="./js/index.js"></script>
 </body>
 </html>
