@@ -21,24 +21,25 @@ function buttonToggle(inputsList, buttonElement, classesObj) {
 }
 
 
-function showError(inputElement, errorElement, classesObj) {
+function showError(inputElement, formElement, classesObj) {
+  const errorElement = formElement.querySelector(`.${inputElement.name}-input-error`)
   inputElement.classList.add(classesObj.inputErrorClass)
   errorElement.textContent = inputElement.validationMessage
 }
 
 
-function hideError(inputElement, errorElement, classesObj) {
+function hideError(inputElement, formElement, classesObj) {
+  const errorElement = formElement.querySelector(`.${inputElement.name}-input-error`)
   inputElement.classList.remove(classesObj.inputErrorClass)
   errorElement.textContent = ''
 }
 
 
 function validateInput(inputElement, formElement, classesObj) {
-  const errorElement = formElement.querySelector(`.${inputElement.name}-input-error`)
   if (!isValid(inputElement)) {
-    showError(inputElement, errorElement, classesObj)
+    showError(inputElement, formElement, classesObj)
   } else {
-    hideError(inputElement, errorElement, classesObj)
+    hideError(inputElement, formElement, classesObj)
   }
 }
 

@@ -3,7 +3,7 @@ import { initialPlaces } from "./initialPlaces.js"
 const popupProfileEditor = document.querySelector('.popup_sort_profile')
 const popupPlacesEditor = document.querySelector('.popup_sort_place')
 const popupPicture = document.querySelector('.popup_sort_picture')
-const popups = document.querySelectorAll('.popup')
+const popups = Array.from(document.querySelectorAll('.popup'))
 const popupProfileOpenButton = document.querySelector('.profile__edit-btn')
 const popupPlacesOpenButton = document.querySelector('.profile__add-btn')
 
@@ -17,48 +17,44 @@ const formPlacesElement = popupPlacesEditor.querySelector('.popup__form')
 const placeInputName = popupPlacesEditor.querySelector('.popup__input_kind_name')
 const placeInputLink = popupPlacesEditor.querySelector('.popup__input_kind_link')
 
-const placesList = document.querySelector('.places__list')
+const pictureZoomed = document.querySelector('.zoomed-picture__image')
+const pictureCaption = document.querySelector('.zoomed-picture__caption')
 
-let currentPopup
+const placeTemplate = document.querySelector('#place').content
+const placesContainer = document.querySelector('.places__list')
 
 
 function closePopupByEscape(evt) {
   if (evt.key === 'Escape') {
-    closePopup(currentPopup);
-    document.removeEventListener('keydown', closePopupByEscape)
+    const openedPopup = document.querySelector('.popup_opened')
+    closePopup(openedPopup)
   }
 }
 
-function closePopupByOverlay(evt) {
-  if (Array.from(evt.target.classList).includes('popup__close') || evt.target === evt.currentTarget) {
-    closePopup(currentPopup)
-    currentPopup.removeEventListener('click', closePopupByOverlay)
+
+function closePopupByOverlay(evt, popup) {
+  if (evt.target.classList.contains('popup__close') || evt.target === evt.currentTarget) {
+    closePopup(popup)
   }
 }
 
 
 function openPopup(popup) {
   popup.classList.add('popup_opened')
-  currentPopup = popup
   document.addEventListener('keydown', closePopupByEscape)
-  popup.addEventListener('click', closePopupByOverlay)
-}
-
-
-function renderPopupProfile() {
-  inputName.value = profileName.textContent
-  inputAbout.value = profileAbout.textContent
 }
 
 
 function openPopupProfile() {
   openPopup(popupProfileEditor)
-  renderPopupProfile()
+  inputName.value = profileName.textContent
+  inputAbout.value = profileAbout.textContent
 }
 
 
 function closePopup(popup) {
   popup.classList.remove('popup_opened')
+  document.removeEventListener('keydown', closePopupByEscape)
 }
 
 
@@ -67,18 +63,15 @@ function putLike(evt) {
 }
 
 
-function openZoomedPicture(name, link) {
-  const pictureZoomed = document.querySelector('.zoomed-picture__image')
-  const pictureCaption = document.querySelector('.zoomed-picture__caption')
+function openZoomedPicture(placeData) {
   openPopup(popupPicture)
-  pictureZoomed.src = link
-  pictureZoomed.alt = name
-  pictureCaption.textContent = name
+  pictureZoomed.src = placeData.link
+  pictureZoomed.alt = placeData.name
+  pictureCaption.textContent = placeData.name
 }
 
 
-function createPlace(name, link) {
-  const placeTemplate = document.querySelector('#place').content
+function createPlace(placeData) {
   const placeElement = placeTemplate.querySelector('.place').cloneNode(true)
 
   const placeButtonDelete = placeElement.querySelector('.place__delete')
@@ -86,13 +79,13 @@ function createPlace(name, link) {
   const placeName = placeElement.querySelector('.place__name')
   const placePicture = placeElement.querySelector('.place__image')
 
-  placeName.textContent = name
-  placePicture.src = link
-  placePicture.alt = name
+  placeName.textContent = placeData.name
+  placePicture.src = placeData.link
+  placePicture.alt = placeData.name
 
   placeButtonDelete.addEventListener('click', () => placeElement.remove())
   placeButtonLike.addEventListener('click', putLike)
-  placePicture.addEventListener('click', () => openZoomedPicture(name, link))
+  placePicture.addEventListener('click', () => openZoomedPicture(placeData))
 
   return placeElement
 }
@@ -113,18 +106,26 @@ function handleFormSubmitProfile(evt) {
 
 function handleFormSubmitPlaces(evt) {
   evt.preventDefault()
-  const placeNew = createPlace(placeInputName.value, placeInputLink.value)
-  addPlace(placeNew, placesList)
+  const newPlaceData = {
+    name: placeInputName.value,
+    link: placeInputLink.value
+  }
+  const newPlace = createPlace(newPlaceData)
+  addPlace(newPlace, placesContainer)
   closePopup(popupPlacesEditor)
   placeInputName.value = ''
   placeInputLink.value = ''
+
+  const buttonElement = evt.submitter
+  buttonElement.classList.add('popup__submit-btn_disabled')
+  buttonElement.setAttribute('disabled', true)
 }
 
 
 function renderInitialPlaces() {
   initialPlaces.forEach(item => {
-    const placeNew = createPlace(item.name, item.link)
-    addPlace(placeNew, placesList)
+    const newPlace = createPlace(item)
+    addPlace(newPlace, placesContainer)
   })
 }
 
@@ -135,6 +136,10 @@ function addEventListeners() {
 
   popupProfileOpenButton.addEventListener('click', openPopupProfile)
   popupPlacesOpenButton.addEventListener('click', () => openPopup(popupPlacesEditor))
+
+  popups.forEach(popup => {
+    popup.addEventListener('click', evt => closePopupByOverlay(evt, popup))
+  })
 }
 
 
