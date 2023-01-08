@@ -1,4 +1,5 @@
 import { initialPlaces } from "./initialPlaces.js"
+import { Card } from './Card.js'
 
 const popupProfileEditor = document.querySelector('.popup_sort_profile')
 const popupPlacesEditor = document.querySelector('.popup_sort_place')
@@ -20,7 +21,6 @@ const placeInputLink = popupPlacesEditor.querySelector('.popup__input_kind_link'
 const pictureZoomed = document.querySelector('.zoomed-picture__image')
 const pictureCaption = document.querySelector('.zoomed-picture__caption')
 
-const placeTemplate = document.querySelector('#place').content
 const placesContainer = document.querySelector('.places__list')
 
 
@@ -58,11 +58,6 @@ function closePopup(popup) {
 }
 
 
-function putLike(evt) {
-  evt.target.classList.toggle('place__like_active')
-}
-
-
 function openZoomedPicture(placeData) {
   openPopup(popupPicture)
   pictureZoomed.src = placeData.link
@@ -72,22 +67,11 @@ function openZoomedPicture(placeData) {
 
 
 function createPlace(placeData) {
-  const placeElement = placeTemplate.querySelector('.place').cloneNode(true)
-
-  const placeButtonDelete = placeElement.querySelector('.place__delete')
-  const placeButtonLike = placeElement.querySelector('.place__like')
-  const placeName = placeElement.querySelector('.place__name')
-  const placePicture = placeElement.querySelector('.place__image')
-
-  placeName.textContent = placeData.name
-  placePicture.src = placeData.link
-  placePicture.alt = placeData.name
-
-  placeButtonDelete.addEventListener('click', () => placeElement.remove())
-  placeButtonLike.addEventListener('click', putLike)
+  const placeElement = new Card(placeData, '#place')
+  const newPlace = placeElement.getCard()
+  const placePicture = newPlace.querySelector('.place__image')
   placePicture.addEventListener('click', () => openZoomedPicture(placeData))
-
-  return placeElement
+  return newPlace
 }
 
 
