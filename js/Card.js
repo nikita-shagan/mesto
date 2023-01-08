@@ -35,7 +35,7 @@ export class Card {
     cardPicture.alt = this._name
   }
 
-  _createCard() {
+  createCard() {
     const cardElement = this._createCardPattern()
 
     this._setCardName(cardElement)
@@ -44,10 +44,6 @@ export class Card {
     this._handlePicture(cardElement)
 
     return cardElement
-  }
-
-  getCard() {
-    return this._createCard()
   }
 }
 

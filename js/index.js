@@ -1,5 +1,6 @@
 import { initialPlaces } from "./initialPlaces.js"
 import { Card } from './Card.js'
+import { FormValidator } from './FormValidator.js'
 
 const popupProfileEditor = document.querySelector('.popup_sort_profile')
 const popupPlacesEditor = document.querySelector('.popup_sort_place')
@@ -20,8 +21,14 @@ const placeInputLink = popupPlacesEditor.querySelector('.popup__input_kind_link'
 
 const pictureZoomed = document.querySelector('.zoomed-picture__image')
 const pictureCaption = document.querySelector('.zoomed-picture__caption')
-
 const placesContainer = document.querySelector('.places__list')
+const formSetup = {
+  formSelector: '.popup__form',
+  inputSelector: '.popup__input',
+  submitButtonSelector: '.popup__submit-btn',
+  inactiveButtonClass: 'popup__submit-btn_disabled',
+  inputErrorClass: 'popup__input_type_error',
+}
 
 
 function closePopupByEscape(evt) {
@@ -66,17 +73,17 @@ function openZoomedPicture(placeData) {
 }
 
 
-function createPlace(placeData) {
+function createPlaceCard(placeData) {
   const placeElement = new Card(placeData, '#place')
-  const newPlace = placeElement.getCard()
-  const placePicture = newPlace.querySelector('.place__image')
+  const newPlaceCard = placeElement.createCard()
+  const placePicture = newPlaceCard.querySelector('.place__image')
   placePicture.addEventListener('click', () => openZoomedPicture(placeData))
-  return newPlace
+  return newPlaceCard
 }
 
 
-function addPlace(place, container) {
-  container.prepend(place)
+function addPlaceCard(placeCard, container) {
+  container.prepend(placeCard)
 }
 
 
@@ -94,8 +101,8 @@ function handleFormSubmitPlaces(evt) {
     name: placeInputName.value,
     link: placeInputLink.value
   }
-  const newPlace = createPlace(newPlaceData)
-  addPlace(newPlace, placesContainer)
+  const newPlaceCard = createPlaceCard(newPlaceData)
+  addPlaceCard(newPlaceCard, placesContainer)
   closePopup(popupPlacesEditor)
   placeInputName.value = ''
   placeInputLink.value = ''
@@ -108,8 +115,8 @@ function handleFormSubmitPlaces(evt) {
 
 function renderInitialPlaces() {
   initialPlaces.forEach(item => {
-    const newPlace = createPlace(item)
-    addPlace(newPlace, placesContainer)
+    const newPlaceCard = createPlaceCard(item)
+    addPlaceCard(newPlaceCard, placesContainer)
   })
 }
 
@@ -127,5 +134,14 @@ function addEventListeners() {
 }
 
 
+function enableValidation(classesObj) {
+  const formsList = Array.from(document.querySelectorAll(classesObj.formSelector))
+  formsList.forEach(formElement => {
+    const formValidator = new FormValidator(formSetup, formElement)
+    formValidator.enableValidation()
+  })
+}
+
 renderInitialPlaces()
 addEventListeners()
+enableValidation(formSetup)
