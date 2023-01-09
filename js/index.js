@@ -1,34 +1,28 @@
 import { initialPlaces } from "./initialPlaces.js"
 import { Card } from './Card.js'
 import { FormValidator } from './FormValidator.js'
+import {popupProfileEditor,
+  popupPlacesEditor,
+  popupPicture,
+  popups,
+  popupProfileOpenButton,
+  popupPlacesOpenButton,
+  formProfileElement,
+  inputName,
+  inputAbout,
+  profileName,
+  profileAbout,
+  formPlacesElement,
+  placeInputName,
+  placeInputLink,
+  pictureZoomed,
+  pictureCaption,
+  placesContainer,
+  formSetup
+} from './constants.js'
 
-const popupProfileEditor = document.querySelector('.popup_sort_profile')
-const popupPlacesEditor = document.querySelector('.popup_sort_place')
-const popupPicture = document.querySelector('.popup_sort_picture')
-const popups = Array.from(document.querySelectorAll('.popup'))
-const popupProfileOpenButton = document.querySelector('.profile__edit-btn')
-const popupPlacesOpenButton = document.querySelector('.profile__add-btn')
-
-const formProfileElement = popupProfileEditor.querySelector('.popup__form')
-const inputName = popupProfileEditor.querySelector('.popup__input_kind_name')
-const inputAbout = popupProfileEditor.querySelector('.popup__input_kind_about')
-const profileName = document.querySelector('.profile__name')
-const profileAbout = document.querySelector('.profile__description')
-
-const formPlacesElement = popupPlacesEditor.querySelector('.popup__form')
-const placeInputName = popupPlacesEditor.querySelector('.popup__input_kind_name')
-const placeInputLink = popupPlacesEditor.querySelector('.popup__input_kind_link')
-
-const pictureZoomed = document.querySelector('.zoomed-picture__image')
-const pictureCaption = document.querySelector('.zoomed-picture__caption')
-const placesContainer = document.querySelector('.places__list')
-const formSetup = {
-  formSelector: '.popup__form',
-  inputSelector: '.popup__input',
-  submitButtonSelector: '.popup__submit-btn',
-  inactiveButtonClass: 'popup__submit-btn_disabled',
-  inputErrorClass: 'popup__input_type_error',
-}
+const formProfileValidator = new FormValidator(formSetup, formProfileElement)
+const formPlacesValidator = new FormValidator(formSetup, formPlacesElement)
 
 
 function closePopupByEscape(evt) {
@@ -40,7 +34,14 @@ function closePopupByEscape(evt) {
 
 
 function closePopupByOverlay(evt, popup) {
-  if (evt.target.classList.contains('popup__close') || evt.target === evt.currentTarget) {
+  if (evt.target === evt.currentTarget) {
+    closePopup(popup)
+  }
+}
+
+
+function closePopupByX(evt, popup) {
+  if (evt.target.classList.contains('popup__close')) {
     closePopup(popup)
   }
 }
@@ -56,6 +57,7 @@ function openPopupProfile() {
   openPopup(popupProfileEditor)
   inputName.value = profileName.textContent
   inputAbout.value = profileAbout.textContent
+  formProfileValidator.resetValidation()
 }
 
 
@@ -104,12 +106,8 @@ function handleFormSubmitPlaces(evt) {
   const newPlaceCard = createPlaceCard(newPlaceData)
   addPlaceCard(newPlaceCard, placesContainer)
   closePopup(popupPlacesEditor)
-  placeInputName.value = ''
-  placeInputLink.value = ''
-
-  const buttonElement = evt.submitter
-  buttonElement.classList.add('popup__submit-btn_disabled')
-  buttonElement.setAttribute('disabled', true)
+  formPlacesElement.reset();
+  formPlacesValidator.resetValidation()
 }
 
 
@@ -129,19 +127,17 @@ function addEventListeners() {
   popupPlacesOpenButton.addEventListener('click', () => openPopup(popupPlacesEditor))
 
   popups.forEach(popup => {
-    popup.addEventListener('click', evt => closePopupByOverlay(evt, popup))
+    popup.addEventListener('mousedown', evt => closePopupByOverlay(evt, popup))
+  })
+
+  popups.forEach(popup => {
+    popup.addEventListener('click', evt => closePopupByX(evt, popup))
   })
 }
 
 
-function enableValidation(classesObj) {
-  const formsList = Array.from(document.querySelectorAll(classesObj.formSelector))
-  formsList.forEach(formElement => {
-    const formValidator = new FormValidator(formSetup, formElement)
-    formValidator.enableValidation()
-  })
-}
+formProfileValidator.enableValidation()
+formPlacesValidator.enableValidation()
 
 renderInitialPlaces()
 addEventListeners()
-enableValidation(formSetup)

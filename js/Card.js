@@ -14,36 +14,30 @@ export class Card {
     evt.target.classList.toggle('place__like_active')
   }
 
-  _setCardName(cardElement) {
-    const cardName = cardElement.querySelector('.place__name')
+  _setCardName() {
+    const cardName = this._cardElement.querySelector('.place__name')
     cardName.textContent = this._name
   }
 
-  _handleCardRemoving(cardElement) {
-    const cardButtonDelete = cardElement.querySelector('.place__delete')
-    cardButtonDelete.addEventListener('click', () => cardElement.remove())
-  }
-
-  _handleLike(cardElement) {
-    const cardButtonLike = cardElement.querySelector('.place__like')
-    cardButtonLike.addEventListener('click', this._putLike)
-  }
-
-  _handlePicture(cardElement) {
-    const cardPicture = cardElement.querySelector('.place__image')
+  _handlePicture() {
+    const cardPicture = this._cardElement.querySelector('.place__image')
     cardPicture.src = this._link
     cardPicture.alt = this._name
   }
 
+  _addListeners() {
+    const cardButtonLike = this._cardElement.querySelector('.place__like')
+    const cardButtonDelete = this._cardElement.querySelector('.place__delete')
+    cardButtonLike.addEventListener('click', this._putLike)
+    cardButtonDelete.addEventListener('click', () => this._cardElement.remove())
+  }
+
   createCard() {
-    const cardElement = this._createCardPattern()
-
-    this._setCardName(cardElement)
-    this._handleCardRemoving(cardElement)
-    this._handleLike(cardElement)
-    this._handlePicture(cardElement)
-
-    return cardElement
+    this._cardElement = this._createCardPattern()
+    this._setCardName()
+    this._handlePicture()
+    this._addListeners()
+    return this._cardElement
   }
 }
 
