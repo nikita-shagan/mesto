@@ -1,8 +1,9 @@
-export class Card {
-  constructor(cardData, templateSelector) {
-    this._link = cardData.link
-    this._name = cardData.name
+export default class Card {
+  constructor(cardData, templateSelector, handleCardClick) {
+    this._link = cardData.placeLink
+    this._name = cardData.placeName
     this._templateSelector = templateSelector
+    this._handleCardClick = handleCardClick
   }
 
   _createCardPattern() {
@@ -30,6 +31,11 @@ export class Card {
     const cardButtonDelete = this._cardElement.querySelector('.place__delete')
     cardButtonLike.addEventListener('click', this._putLike)
     cardButtonDelete.addEventListener('click', () => this._cardElement.remove())
+    this._cardElement.addEventListener('click', (evt) => {
+      if (evt.target !== cardButtonLike && evt.target !== cardButtonDelete) {
+        this._handleCardClick()
+      }
+    })
   }
 
   createCard() {

@@ -1,144 +1,94 @@
 import './pages/index.css';
-import { initialPlaces } from "./initialPlaces.js"
-import { Card } from './Card.js'
-import { FormValidator } from './FormValidator.js'
-import {popupProfileEditor,
-  popupPlacesEditor,
-  popupPicture,
-  popups,
-  popupProfileOpenButton,
-  popupPlacesOpenButton,
+import Section from "./components/Section";
+import PopupWithForm from "./components/PopupWithForm";
+import PopupWithImage from "./components/PopupWithImage";
+import UserInfo from "./components/UserInfo";
+import Card from './components/Card.js'
+import FormValidator from './components/FormValidator.js'
+import { initialPlaces } from "./utils/initialPlaces.js"
+import {popupProfileEditorSelector,
+  profileNameSelector,
+  profileAboutSelector,
   formProfileElement,
-  inputName,
-  inputAbout,
-  profileName,
-  profileAbout,
+  inputProfileName,
+  inputProfileAbout,
+  popupProfileOpenButton,
+  popupPlacesEditorSelector,
   formPlacesElement,
-  placeInputName,
-  placeInputLink,
-  pictureZoomed,
-  pictureCaption,
-  placesContainer,
+  popupPlacesOpenButton,
+  popupPictureSelector,
+  placesContainerSelector,
   formSetup
-} from './constants.js'
-
-const formProfileValidator = new FormValidator(formSetup, formProfileElement)
-const formPlacesValidator = new FormValidator(formSetup, formPlacesElement)
+} from './utils/constants.js'
 
 
-function closePopupByEscape(evt) {
-  if (evt.key === 'Escape') {
-    const openedPopup = document.querySelector('.popup_opened')
-    closePopup(openedPopup)
-  }
-}
-
-
-function closePopupByOverlay(evt, popup) {
-  if (evt.target === evt.currentTarget) {
-    closePopup(popup)
-  }
-}
-
-
-function closePopupByX(evt, popup) {
-  if (evt.target.classList.contains('popup__close')) {
-    closePopup(popup)
-  }
-}
-
-
-function openPopup(popup) {
-  popup.classList.add('popup_opened')
-  document.addEventListener('keydown', closePopupByEscape)
-}
-
-
-function openPopupProfile() {
-  openPopup(popupProfileEditor)
-  inputName.value = profileName.textContent
-  inputAbout.value = profileAbout.textContent
+const openPopupProfile = () => {
+  popupProfileEditor.open()
+  const userInfo = user.getUserInfo()
+  inputProfileName.value = userInfo.profileName
+  inputProfileAbout.value = userInfo.profileAbout
   formProfileValidator.resetValidation()
 }
 
 
-function closePopup(popup) {
-  popup.classList.remove('popup_opened')
-  document.removeEventListener('keydown', closePopupByEscape)
+const createPlaceCard = (placeData) => {
+  const popupPicture = new PopupWithImage(popupPictureSelector, placeData)
+  popupPicture.setEventListeners()
+  const placeElement = new Card(placeData, '#place', () => popupPicture.open())
+  return placeElement.createCard()
 }
 
 
-function openZoomedPicture(placeData) {
-  openPopup(popupPicture)
-  pictureZoomed.src = placeData.link
-  pictureZoomed.alt = placeData.name
-  pictureCaption.textContent = placeData.name
-}
-
-
-function createPlaceCard(placeData) {
-  const placeElement = new Card(placeData, '#place')
-  const newPlaceCard = placeElement.createCard()
-  const placePicture = newPlaceCard.querySelector('.place__image')
-  placePicture.addEventListener('click', () => openZoomedPicture(placeData))
-  return newPlaceCard
-}
-
-
-function addPlaceCard(placeCard, container) {
-  container.prepend(placeCard)
-}
-
-
-function handleFormSubmitProfile(evt) {
+const handleFormSubmitProfile = (evt, newInputData) => {
   evt.preventDefault()
-  profileName.textContent = inputName.value
-  profileAbout.textContent = inputAbout.value
-  closePopup(popupProfileEditor)
+  user.setUserInfo(newInputData)
 }
 
 
-function handleFormSubmitPlaces(evt) {
+const handleFormSubmitPlaces = (evt, newPlaceData) => {
   evt.preventDefault()
-  const newPlaceData = {
-    name: placeInputName.value,
-    link: placeInputLink.value
-  }
   const newPlaceCard = createPlaceCard(newPlaceData)
-  addPlaceCard(newPlaceCard, placesContainer)
-  closePopup(popupPlacesEditor)
-  formPlacesElement.reset();
+  cardRenderer.addItem(newPlaceCard)
   formPlacesValidator.resetValidation()
 }
 
 
-function renderInitialPlaces() {
-  initialPlaces.forEach(item => {
-    const newPlaceCard = createPlaceCard(item)
-    addPlaceCard(newPlaceCard, placesContainer)
-  })
-}
+const cardRenderer = new Section({
+  items: initialPlaces,
+  renderer: (placeData) => {
+    const newPlaceCard = createPlaceCard(placeData)
+    cardRenderer.addItem(newPlaceCard)
+  }
+}, placesContainerSelector)
 
 
-function addEventListeners() {
-  formProfileElement.addEventListener('submit', handleFormSubmitProfile)
-  formPlacesElement.addEventListener('submit', handleFormSubmitPlaces)
-
-  popupProfileOpenButton.addEventListener('click', openPopupProfile)
-  popupPlacesOpenButton.addEventListener('click', () => openPopup(popupPlacesEditor))
-
-  popups.forEach(popup => {
-    popup.addEventListener('mousedown', evt => closePopupByOverlay(evt, popup))
-  })
-
-  popups.forEach(popup => {
-    popup.addEventListener('click', evt => closePopupByX(evt, popup))
-  })
-}
+const popupProfileEditor = new PopupWithForm({
+  popupSelector: popupProfileEditorSelector,
+  formElement: formProfileElement,
+  handleFormSubmit: handleFormSubmitProfile
+})
 
 
+const popupPlacesEditor = new PopupWithForm({
+  popupSelector: popupPlacesEditorSelector,
+  formElement: formPlacesElement,
+  handleFormSubmit: handleFormSubmitPlaces
+})
+
+
+const user = new UserInfo({
+  nameElementSelector: profileNameSelector,
+  aboutElementSelector: profileAboutSelector
+})
+
+
+const formProfileValidator = new FormValidator(formSetup, formProfileElement)
+const formPlacesValidator = new FormValidator(formSetup, formPlacesElement)
+
+cardRenderer.renderItems()
+popupProfileEditor.setEventListeners()
+popupPlacesEditor.setEventListeners()
 formProfileValidator.enableValidation()
 formPlacesValidator.enableValidation()
-
-renderInitialPlaces()
-addEventListeners()
+popupPlacesOpenButton.addEventListener('click', () => popupPlacesEditor.open())
+popupProfileOpenButton.addEventListener('click', openPopupProfile)
