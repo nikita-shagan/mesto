@@ -19,13 +19,13 @@ export default class FormValidator {
     })
   }
 
-  _buttonToggle(inputsList, buttonElement) {
-    if (this._hasInvalidInput(inputsList)) {
-      buttonElement.classList.add(this._inactiveButtonClass)
-      buttonElement.setAttribute('disabled', true)
+  _toggleButtonState() {
+    if (this._hasInvalidInput(this._inputsList)) {
+      this._buttonElement.classList.add(this._inactiveButtonClass)
+      this._buttonElement.setAttribute('disabled', true)
     } else {
-      buttonElement.classList.remove(this._inactiveButtonClass)
-      buttonElement.removeAttribute('disabled')
+      this._buttonElement.classList.remove(this._inactiveButtonClass)
+      this._buttonElement.removeAttribute('disabled')
     }
   }
 
@@ -50,17 +50,17 @@ export default class FormValidator {
   }
 
   enableValidation() {
-    this._buttonToggle(this._inputsList, this._buttonElement)
+    this._toggleButtonState()
     this._inputsList.forEach(inputElement => {
       inputElement.addEventListener('input', () => {
         this._validateInput(inputElement)
-        this._buttonToggle(this._inputsList, this._buttonElement)
+        this._toggleButtonState()
       })
     })
   }
 
   resetValidation() {
-    this._buttonToggle(this._inputsList, this._buttonElement)
+    this._toggleButtonState()
     this._inputsList.forEach(inputElement => {
       this._hideError(inputElement)
     })

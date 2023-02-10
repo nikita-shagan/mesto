@@ -11,35 +11,31 @@ export default class Card {
     return cardTemplate.querySelector('.place').cloneNode(true)
   }
 
-  _putLike(evt) {
+  _toggleLike(evt) {
     evt.target.classList.toggle('place__like_active')
   }
 
   _setCardName() {
-    const cardName = this._cardElement.querySelector('.place__name')
-    cardName.textContent = this._name
+    this._cardName.textContent = this._name
   }
 
   _handlePicture() {
-    const cardPicture = this._cardElement.querySelector('.place__image')
-    cardPicture.src = this._link
-    cardPicture.alt = this._name
+    this._cardPicture.src = this._link
+    this._cardPicture.alt = this._name
   }
 
   _addListeners() {
-    const cardButtonLike = this._cardElement.querySelector('.place__like')
-    const cardButtonDelete = this._cardElement.querySelector('.place__delete')
-    cardButtonLike.addEventListener('click', this._putLike)
-    cardButtonDelete.addEventListener('click', () => this._cardElement.remove())
-    this._cardElement.addEventListener('click', (evt) => {
-      if (evt.target !== cardButtonLike && evt.target !== cardButtonDelete) {
-        this._handleCardClick()
-      }
-    })
+    this._cardButtonLike.addEventListener('click', this._toggleLike)
+    this._cardButtonDelete.addEventListener('click', () => this._cardElement.remove())
+    this._cardPicture.addEventListener('click', () => this._handleCardClick())
   }
 
   createCard() {
     this._cardElement = this._createCardPattern()
+    this._cardName = this._cardElement.querySelector('.place__name')
+    this._cardPicture = this._cardElement.querySelector('.place__image')
+    this._cardButtonLike = this._cardElement.querySelector('.place__like')
+    this._cardButtonDelete = this._cardElement.querySelector('.place__delete')
     this._setCardName()
     this._handlePicture()
     this._addListeners()

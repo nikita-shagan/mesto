@@ -5,6 +5,10 @@ export default class Section {
     this._container = document.querySelector(containerSelector)
   }
 
+  renderItem(itemData) {
+    return this._renderer(itemData);
+  }
+
   addItem(elem) {
     this._container.prepend(elem)
   }
@@ -15,8 +19,9 @@ export default class Section {
 
   renderItems() {
     this.clear();
-    this._items.forEach(item => {
-      this._renderer(item);
+    this._items.forEach(itemData => {
+      const elem  = this.renderItem(itemData)
+      this.addItem(elem)
     });
   }
 }
