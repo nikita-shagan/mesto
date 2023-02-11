@@ -13,8 +13,6 @@ import {popupProfileEditorSelector,
   popupPlacesEditorSelector,
   popupPlacesOpenButton,
   popupPictureSelector,
-  pictureZoomed,
-  pictureCaption,
   placesContainerSelector,
   formSetup
 } from '../utils/constants.js'
@@ -42,8 +40,7 @@ const handleFormSubmitProfile = (evt, newInputData) => {
 
 const handleFormSubmitPlaces = (evt, newPlaceData) => {
   evt.preventDefault()
-  const newPlaceCard = cardRenderer.renderItem(newPlaceData)
-  cardRenderer.addItem(newPlaceCard)
+  cardRenderer.addItem(newPlaceData)
 }
 
 
@@ -68,11 +65,7 @@ const cardRenderer = new Section({
 }, placesContainerSelector)
 
 
-const popupPicture = new PopupWithImage(popupPictureSelector, (placeName, placeLink) => {
-  pictureZoomed.src = placeLink
-  pictureZoomed.alt = placeName
-  pictureCaption.textContent = placeName
-})
+const popupPicture = new PopupWithImage(popupPictureSelector)
 
 
 const popupProfileEditor = new PopupWithForm({

@@ -9,9 +9,6 @@ export const popupPlacesOpenButton = document.querySelector('.profile__add-btn')
 
 
 export const popupPictureSelector = '.popup_sort_picture'
-export const pictureZoomed = document.querySelector('.zoomed-picture__image')
-export const pictureCaption = document.querySelector('.zoomed-picture__caption')
-
 
 export const placesContainerSelector = '.places__list'
 export const formSetup = {
