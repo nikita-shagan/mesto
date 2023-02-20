@@ -14,13 +14,15 @@
     </header>
     <main class="content">
       <section class="profile">
-        <img src="<%=require('../images/skittle.webp')%>" alt="Изображения профиля" class="profile__avatar">
+        <div class="profile__avatar-container">
+          <img src="#" alt="Изображения профиля" class="profile__avatar">
+        </div>
         <div class="profile__info">
           <div class="profile__heading">
-            <h1 class="profile__name">Скиттл</h1>
+            <h1 class="profile__name"></h1>
             <button class="profile__edit-btn" type="button"></button>
           </div>
-          <p class="profile__description">Исследователь Земли и&nbsp;не&nbsp;только</p>
+          <p class="profile__description"></p>
         </div>
         <button class="profile__add-btn" type="button"></button>
       </section>
@@ -43,12 +45,12 @@
             Редактировать профиль
           </h3>
           <div class="popup__input-container">
-            <input type="text" class="popup__input popup__input_kind_name" name="profileName" value="" placeholder="Имя" required minlength="2" maxlength="40">
-            <span class="popup__error profileName-input-error"></span>
+            <input type="text" class="popup__input popup__input_kind_name" name="name" value="" placeholder="Имя" required minlength="2" maxlength="40">
+            <span class="popup__error name-input-error"></span>
           </div>
           <div class="popup__input-container">
-            <input type="text" class="popup__input popup__input_kind_about" name="profileAbout" value="" placeholder="Работа" required minlength="2" maxlength="200">
-            <span class="popup__error profileAbout-input-error"></span>
+            <input type="text" class="popup__input popup__input_kind_about" name="about" value="" placeholder="Работа" required minlength="2" maxlength="200">
+            <span class="popup__error about-input-error"></span>
           </div>
           <button class="popup__submit-btn" type="submit">
             Сохранить
@@ -64,12 +66,12 @@
             Новое место
           </h3>
           <div class="popup__input-container">
-            <input type="text" class="popup__input popup__input_kind_name" name="placeName" value="" placeholder="Название" required minlength="2" maxlength="30">
-            <span class="popup__error placeName-input-error"></span>
+            <input type="text" class="popup__input popup__input_kind_name" name="name" value="" placeholder="Название" required minlength="2" maxlength="30">
+            <span class="popup__error name-input-error"></span>
           </div>
           <div class="popup__input-container">
-            <input type="url" class="popup__input popup__input_kind_link" name="placeLink" value="" placeholder="Ссылка на картинку" required>
-            <span class="popup__error placeLink-input-error"></span>
+            <input type="url" class="popup__input popup__input_kind_link" name="link" value="" placeholder="Ссылка на картинку" required>
+            <span class="popup__error link-input-error"></span>
           </div>
           <button class="popup__submit-btn" type="submit">
             Создать
@@ -88,6 +90,36 @@
         </figure>
       </div>
     </div>
+    <div class="popup popup_sort_delete">
+      <div class="popup__container">
+        <button class="popup__close" type="button"></button>
+        <form action="#" name="placeDeleting" class="popup__form" novalidate>
+          <h3 class="popup__title">
+            Вы уверены?
+          </h3>
+          <button class="popup__submit-btn" type="submit">
+            Удалить
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
+  <div class="popup popup_sort_avatar">
+    <div class="popup__container">
+      <button class="popup__close" type="button"></button>
+      <form action="#" name="avatarChanging" class="popup__form" novalidate>
+        <h3 class="popup__title">
+          Обновить аватар
+        </h3>
+        <div class="popup__input-container">
+          <input type="url" class="popup__input popup__input_kind_link" name="link" value="" placeholder="Ссылка на картинку" required>
+          <span class="popup__error link-input-error"></span>
+        </div>
+        <button class="popup__submit-btn" type="submit">
+          Сохранить
+        </button>
+      </form>
+    </div>
   </div>
   <template id="place">
     <li class="place">
@@ -97,7 +129,12 @@
         <h2 class="place__name">
 
         </h2>
-        <button type="button" class="place__like"></button>
+        <div class="place__likes">
+          <button type="button" class="place__like"></button>
+          <p class="place__likes-counter">
+            15
+          </p>
+        </div>
       </div>
     </li>
   </template>

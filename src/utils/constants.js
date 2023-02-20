@@ -9,6 +9,11 @@ export const popupPlacesOpenButton = document.querySelector('.profile__add-btn')
 
 
 export const popupPictureSelector = '.popup_sort_picture'
+export const popupDeleteSelector = '.popup_sort_delete'
+
+export const popupAvatarSelector = '.popup_sort_avatar'
+export const popupAvatarOpenButton = document.querySelector('.profile__avatar-container')
+export const profileAvatar = document.querySelector('.profile__avatar')
 
 export const placesContainerSelector = '.places__list'
 export const formSetup = {

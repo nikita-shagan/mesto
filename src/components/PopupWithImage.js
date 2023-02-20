@@ -7,10 +7,10 @@ export default class PopupWithImage extends Popup {
     this._pictureCaption = document.querySelector('.zoomed-picture__caption')
   }
 
-  open({placeName, placeLink}) {
+  open({name, link}) {
     super.open();
-    this._pictureZoomed.src = placeLink
-    this._pictureCaption.textContent = placeName
-    this._pictureZoomed.alt = placeName
+    this._pictureZoomed.src = link
+    this._pictureCaption.textContent = name
+    this._pictureZoomed.alt = name
   }
 }
