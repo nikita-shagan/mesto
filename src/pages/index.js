@@ -1,7 +1,7 @@
 import './index.css';
 import Section from "../components/Section";
 import PopupWithForm from "../components/PopupWithForm";
-import PopupWithFormDelete from "../components/PopupWithFormDelete";
+import PopupDeleteCard from "../components/PopupDeleteCard";
 import PopupWithImage from "../components/PopupWithImage";
 import UserInfo from "../components/UserInfo";
 import Card from '../components/Card.js'
@@ -11,6 +11,7 @@ import {
   popupProfileEditorSelector,
   profileNameSelector,
   profileAboutSelector,
+  profileAvatarSelector,
   popupProfileOpenButton,
   popupPlacesEditorSelector,
   popupPlacesOpenButton,
@@ -19,16 +20,15 @@ import {
   popupDeleteSelector,
   popupAvatarSelector,
   popupAvatarOpenButton,
-  profileAvatar,
   formSetup
 } from '../utils/constants.js'
 
 
 const openPopupProfile = () => {
-  popupProfileEditor.open()
   const userInfo = user.getUserInfo()
   popupProfileEditor.setInputValues(userInfo)
   formValidators['profileEditing'].resetValidation()
+  popupProfileEditor.open()
 }
 
 
@@ -43,11 +43,12 @@ const handleFormSubmitProfile = (evt, newInputData) => {
   evt.preventDefault()
   api.updateUserInfo(newInputData)
     .then(res => user.setUserInfo(res))
-    .catch(err => console.log(err))
-    .finally(() => {
-      popupProfileEditor.close()
-      popupProfileEditor.hideLoading()
+    .then(() => popupProfileEditor.close())
+    .catch(err => {
+      console.log(err)
+      alert(`Не удалось обновить профиль, ${err}`)
     })
+    .finally(() => popupProfileEditor.hideLoading())
 }
 
 
@@ -55,33 +56,37 @@ const handleFormSubmitPlaces = (evt, newPlaceData) => {
   popupPlacesEditor.showLoading()
   evt.preventDefault()
   api.addCard(newPlaceData)
-    .then(res => cardRenderer.addItem(res))
-    .catch(err => console.log(err))
-    .finally(() => {
-      popupPlacesEditor.close()
-      popupPlacesEditor.hideLoading()
+    .then(res => cardRenderer.addItemToStart(res))
+    .then(() => popupPlacesEditor.close())
+    .catch(err => {
+      console.log(err)
+      alert(`Не удалось добавить карточку, ${err}`)
     })
+    .finally(() => popupPlacesEditor.hideLoading())
 }
 
-const handleFormSubmitCardDelete = (evt, cardId) => {
+const handleFormSubmitCardDelete = (evt, cardObject) => {
   evt.preventDefault()
-  api.deleteCard(cardId)
-    .then(() => document.getElementById(cardId).remove())
-    .catch(err => console.log(err))
+  api.deleteCard(cardObject.getCardId())
+    .then(() => cardObject.removeCard())
+    .then(() => popupDeleteCard.close())
+    .catch(err => {
+      console.log(err)
+      alert(`Не удалось выполнить удаление, ${err}`)
+    })
 }
 
 const handleFormSubmitAvatarChanging = (evt, {link}) => {
   popupAvatar.showLoading()
   evt.preventDefault()
   api.changeAvatar(link)
-    .then(res => {
-      profileAvatar.src = res.avatar
+    .then(res => user.setUserInfo(res))
+    .then(() => popupAvatar.close())
+    .catch(err => {
+      console.log(err)
+      alert(`Не удалось изменить картинку, ${err}`)
     })
-    .catch(err => console.log(err))
-    .finally(() => {
-      popupAvatar.close()
-      popupAvatar.hideLoading()
-    })
+    .finally(() => popupAvatar.hideLoading())
 }
 
 
@@ -90,31 +95,32 @@ const cardRenderer = new Section({
     const placeElement = new Card({
       cardData: placeData,
       templateSelector: '#place',
+      userInfo: user.getUserInfo(),
       handleCardClick: () => popupPicture.open(placeData),
-      handleDeleteClick: (cardId) => {
+      handleDeleteClick: (cardObject) => {
         popupDeleteCard.open()
-        popupDeleteCard.setCardId(cardId)
+        popupDeleteCard.setCardObject(cardObject)
       },
       handleLikeClick: (likePressed, cardId) => {
         api.toggleLike(likePressed, cardId)
           .then(res => {
             placeElement.setLikes(res.likes)
           })
-          .catch(err => console.log(err))
+          .catch(err => {
+            console.log(err)
+            alert(err)
+          })
       }
     })
-    const card = placeElement.createCard()
-    if (placeData.owner._id !== '427dd20c1ef237217ab5be35') {
-      placeElement.removeDeleteButton()
-    }
-    return card
+    return placeElement.createCard()
   }
 }, placesContainerSelector)
 
 
 const user = new UserInfo({
   nameElementSelector: profileNameSelector,
-  aboutElementSelector: profileAboutSelector
+  aboutElementSelector: profileAboutSelector,
+  avatarElementSelector: profileAvatarSelector
 })
 
 
@@ -156,7 +162,7 @@ const popupPlacesEditor = new PopupWithForm({
 })
 
 
-const popupDeleteCard = new PopupWithFormDelete({
+const popupDeleteCard = new PopupDeleteCard({
   popupSelector: popupDeleteSelector,
   formSelector: formSetup.formSelector,
   handleFormSubmit: handleFormSubmitCardDelete
@@ -175,14 +181,15 @@ popupPicture.setEventListeners()
 popupProfileEditor.setEventListeners()
 popupAvatar.setEventListeners()
 
-api.getInitialCards()
-  .then(res => cardRenderer.renderItems(res.reverse()))
-  .catch(err => console.log(err))
 
 api.getUserInfo()
   .then(res => {
     user.setUserInfo(res)
-    profileAvatar.src = res.avatar
+  })
+  .then(() => {
+    api.getInitialCards()
+      .then(res => cardRenderer.renderItems(res))
+      .catch(err => console.log(err))
   })
   .catch(err => console.log(err))
 

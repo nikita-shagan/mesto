@@ -1,9 +1,11 @@
 export default class Card {
-  constructor({cardData, templateSelector, handleCardClick, handleDeleteClick, handleLikeClick}) {
+  constructor({cardData, userInfo, templateSelector, handleCardClick, handleDeleteClick, handleLikeClick}) {
     this._link = cardData.link
     this._name = cardData.name
     this._likes = cardData.likes
+    this._cardOwnerId =cardData.owner._id
     this._cardId = cardData._id
+    this._iAmOwner = this._cardOwnerId === userInfo._id
     this._templateSelector = templateSelector
     this._handleCardClick = handleCardClick
     this._handleDeleteClick = handleDeleteClick
@@ -26,7 +28,7 @@ export default class Card {
 
   _addListeners() {
     this._cardButtonLike.addEventListener('click', () => this._handleLikeClick(this._likeOnServerPressed, this._cardId))
-    this._cardButtonDelete.addEventListener('click', () => this._handleDeleteClick(this._cardId))
+    this._cardButtonDelete.addEventListener('click', () => this._handleDeleteClick(this))
     this._cardPicture.addEventListener('click', () => this._handleCardClick())
   }
 
@@ -47,13 +49,16 @@ export default class Card {
     this._toggleLike()
   }
 
-  removeDeleteButton() {
+  _removeDeleteButton() {
     this._cardButtonDelete.remove()
+  }
+
+  getCardId() {
+    return this._cardId
   }
 
   createCard() {
     this._cardElement = this._createCardPattern()
-    this._cardElement.id = this._cardId
     this._likesCounter = this._cardElement.querySelector('.place__likes-counter')
     this._cardName = this._cardElement.querySelector('.place__name')
     this._cardPicture = this._cardElement.querySelector('.place__image')
@@ -63,7 +68,14 @@ export default class Card {
     this._handlePicture()
     this._addListeners()
     this.setLikes(this._likes)
+    if (!this._iAmOwner) {
+      this._removeDeleteButton()
+    }
     return this._cardElement
+  }
+
+  removeCard() {
+    this._cardElement.remove()
   }
 }
 

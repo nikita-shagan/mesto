@@ -8,9 +8,9 @@ export default class PopupWithImage extends Popup {
   }
 
   open({name, link}) {
-    super.open();
     this._pictureZoomed.src = link
     this._pictureCaption.textContent = name
     this._pictureZoomed.alt = name
+    super.open();
   }
 }

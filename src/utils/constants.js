@@ -1,6 +1,7 @@
 export const popupProfileEditorSelector = '.popup_sort_profile'
 export const profileNameSelector = '.profile__name'
 export const profileAboutSelector = '.profile__description'
+export const profileAvatarSelector = '.profile__avatar'
 export const popupProfileOpenButton = document.querySelector('.profile__edit-btn')
 
 
@@ -13,7 +14,6 @@ export const popupDeleteSelector = '.popup_sort_delete'
 
 export const popupAvatarSelector = '.popup_sort_avatar'
 export const popupAvatarOpenButton = document.querySelector('.profile__avatar-container')
-export const profileAvatar = document.querySelector('.profile__avatar')
 
 export const placesContainerSelector = '.places__list'
 export const formSetup = {
