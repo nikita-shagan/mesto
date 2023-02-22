@@ -1,11 +1,12 @@
 export default class Card {
-  constructor({cardData, userInfo, templateSelector, handleCardClick, handleDeleteClick, handleLikeClick}) {
+  constructor({cardData, userId, templateSelector, handleCardClick, handleDeleteClick, handleLikeClick}) {
     this._link = cardData.link
     this._name = cardData.name
     this._likes = cardData.likes
-    this._cardOwnerId =cardData.owner._id
     this._cardId = cardData._id
-    this._iAmOwner = this._cardOwnerId === userInfo._id
+    this._cardOwnerId =cardData.owner._id
+    this._userId = userId
+    this._iAmOwner = this._cardOwnerId === this._userId
     this._templateSelector = templateSelector
     this._handleCardClick = handleCardClick
     this._handleDeleteClick = handleDeleteClick
@@ -44,7 +45,7 @@ export default class Card {
     this._likes = likes
     this._likesCounter.textContent = this._likes.length.toString()
     this._likeOnServerPressed = this._likes.some(like => {
-      return like._id === '427dd20c1ef237217ab5be35'
+      return like._id === this._userId
     })
     this._toggleLike()
   }

@@ -95,7 +95,7 @@ const cardRenderer = new Section({
     const placeElement = new Card({
       cardData: placeData,
       templateSelector: '#place',
-      userInfo: user.getUserInfo(),
+      userId: user.getUserId(),
       handleCardClick: () => popupPicture.open(placeData),
       handleDeleteClick: (cardObject) => {
         popupDeleteCard.open()
